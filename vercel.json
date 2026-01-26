@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "asis.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "tobe.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/asis.html",
+      "dest": "/asis.html"
+    },
+    {
+      "src": "/tobe.html",
+      "dest": "/tobe.html"
+    },
+    {
+      "src": "/",
+      "dest": "/asis.html"
+    }
+  ]
+}

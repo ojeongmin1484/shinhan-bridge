@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shinhan Vercel - Asis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .params-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .param-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .param-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .param-value {
+            font-size: 1.1em;
+            color: #333;
+            word-break: break-all;
+        }
+
+        .no-params {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Asis</h1>
+        <h1>파라미터 확인</h1>
+        
+        <div class="params-container" id="paramsContainer">
+            <div class="no-params">URL 파라미터가 없습니다.</div>
+        </div>
+    </div>
+
+    <script>
+        // URL 파라미터 가져오기
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const params = {};
+            
+            // 파라미터 3개 가져오기 (certTxId, signTxId, type)
+            // 빈 문자열도 파라미터로 인식하기 위해 null 체크만 함
+            params.certTxId = urlParams.get('certTxId') !== null ? urlParams.get('certTxId') : null;
+            params.signTxId = urlParams.get('signTxId') !== null ? urlParams.get('signTxId') : null;
+            params.type = urlParams.get('type') !== null ? urlParams.get('type') : null;
+            
+            return params;
+        }
+
+        // 파라미터 표시
+        function displayParams() {
+            const params = getUrlParams();
+            const container = document.getElementById('paramsContainer');
+            console.log(params);
+            // 파라미터가 하나라도 있는지 확인 (null이 아닌 경우)
+            const hasParams = params.certTxId !== null || params.signTxId !== null || params.type !== null;
+            
+            if (!hasParams) {
+                container.innerHTML = '<div class="no-params">URL 파라미터가 없습니다.<br><br>예시: ?certTxId=값1&signTxId=값2&type=값3</div>';
+                return;
+            }
+            
+            // 파라미터 표시
+            container.innerHTML = '';
+            
+            if (params.certTxId !== null) {
+                container.innerHTML += `
+                    <div class="param-item">
+                        <div class="param-label">certTxId</div>
+                        <div class="param-value">${params.certTxId || '(빈 값)'}</div>
+                    </div>
+                `;
+            }
+            
+            if (params.signTxId !== null) {
+                container.innerHTML += `
+                    <div class="param-item">
+                        <div class="param-label">signTxId</div>
+                        <div class="param-value">${params.signTxId || '(빈 값)'}</div>
+                    </div>
+                `;
+            }
+            
+            if (params.type !== null) {
+                container.innerHTML += `
+                    <div class="param-item">
+                        <div class="param-label">type</div>
+                        <div class="param-value">${params.type || '(빈 값)'}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // 페이지 로드 시 파라미터 표시
+        displayParams();
+    </script>
+</body>
+</html>
