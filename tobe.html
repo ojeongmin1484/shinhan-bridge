@@ -201,10 +201,39 @@
                 case '2':
                     // type이 2일 때 처리
                     console.log('type 2 처리');
+                    window.partnerCert
+                        .callCloudSign(signTxId, certTxId, iframe)
+                        .then((result) => {
+                        setSignResult(JSON.stringify(result));
+
+                        if (result.data.resultType === "FAIL") {
+                            console.log("로그인/전자서명 실패");
+                            // 실패 시 모달 닫기 (선택사항)
+                            // if (modal) modal.style.display = "none";
+                        } else if (result.data.resultType === "SUCCESS") {
+                            console.log("로그인/전자서명 성공");
+                            // 성공 시 모달 닫기 (선택사항)
+                            // if (modal) modal.style.display = "none";
+                        }
+                        });
                     break;
                 case '3':
                     // type이 3일 때 처리
                     console.log('type 3 처리');
+                    window.partnerCert
+                        .callCloudSignDirectPin(signTxId, certTxId, iframe)
+                        .then((result) => {
+                        setSignResult(JSON.stringify(result));
+                        if (result.data.resultType === "FAIL") {
+                            console.log("로그인/전자서명 실패");
+                            // 실패 시 모달 닫기 (선택사항)
+                            // if (modal) modal.style.display = "none";
+                        } else if (result.data.resultType === "SUCCESS") {
+                            console.log("로그인/전자서명 성공");
+                            // 성공 시 모달 닫기 (선택사항)
+                            // if (modal) modal.style.display = "none";
+                        }
+                        });
                     break;
                 default:
                     // 그 외의 type 값 처리
