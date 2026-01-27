@@ -206,10 +206,30 @@
             }
         }
 
+        // IndexedDB 데이터베이스 전체 삭제
         function removeRefToken() {
-            console.log(localStorage.getItem('refToken'));
-            localStorage.removeItem('refToken');
-            console.log(localStorage.getItem('refToken'));
+            const dbName = 'ref_token';
+
+            return new Promise((resolve, reject) => {
+                // 데이터베이스가 열려있으면 닫기
+                const deleteRequest = indexedDB.deleteDatabase(dbName);
+
+                deleteRequest.onsuccess = () => {
+                    console.log('IndexedDB 데이터베이스 삭제 완료:', dbName);
+                    resolve();
+                };
+
+                deleteRequest.onerror = () => {
+                    console.error('IndexedDB 데이터베이스 삭제 실패:', deleteRequest.error);
+                    reject(deleteRequest.error);
+                };
+
+                deleteRequest.onblocked = () => {
+                    console.warn('IndexedDB 삭제가 차단됨. 다른 연결이 열려있을 수 있습니다.');
+                    // 차단되어도 일정 시간 후 재시도하거나 resolve
+                    setTimeout(() => resolve(), 100);
+                };
+            });
         }
 
         // partnerCert 초기화 함수
@@ -279,9 +299,10 @@
                     // type이 1일 때 처리
                     console.log('type 1');
                     showIframePopup();
-                    removeRefToken();
-                    window.partnerCert
-                        .callCloudSign(signTxId, certTxId, iframe)
+                    removeRefToken()
+                        .then(() => {
+                            return window.partnerCert.callCloudSign(signTxId, certTxId, iframe);
+                        })
                         .then((result) => {
                         setSignResult(JSON.stringify(result));
 
