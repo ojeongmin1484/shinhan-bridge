@@ -170,7 +170,8 @@
             const certTxId = window.urlParams.certTxId;
             const signTxId = window.urlParams.signTxId;
             const type = window.urlParams.type;
-            
+            const iframe = document.querySelector("#callCloudSignIframe");
+
             if (!type) {
                 console.log('type 파라미터가 없습니다.');
                 return;
