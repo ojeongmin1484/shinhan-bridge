@@ -82,6 +82,8 @@
     <script>
         // URL 파라미터 가져오기
         function getUrlParams() {
+            console.log("partnercert", window.partnerCert);
+
             const urlParams = new URLSearchParams(window.location.search);
             const params = {};
             
