@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shinhan Vercel - Asis</title>
+    <title>Shinhan Vercel - To Be</title>
     <script src="https://dev-m.sign.shinhan.com/dev-SGO1034035/sw/aton/v1.0/partnerCert.js"></script>
     <script src="https://dev-m.sign.shinhan.com/dev-SGO1034035/sw/aton/v1.0/atonCrypto.js"></script>
     <style>
@@ -71,36 +71,35 @@
 </head>
 <body>
     <div class="container">
-        <h1>Asis</h1>
+        <h1>To Be</h1>
         <h1>파라미터 확인</h1>
         
         <div class="params-container" id="paramsContainer">
             <div class="no-params">URL 파라미터가 없습니다.</div>
         </div>
+        <iframe id="callCloudSignIframe" title="callCloudSign"></iframe>
     </div>
 
     <script>
-        // URL 파라미터 가져오기
+        // 전역 변수로 URL 파라미터 저장
+        const urlParams = new URLSearchParams(window.location.search);
+        window.urlParams = {
+            certTxId: urlParams.get('certTxId') !== null ? urlParams.get('certTxId') : null,
+            signTxId: urlParams.get('signTxId') !== null ? urlParams.get('signTxId') : null,
+            type: urlParams.get('type') !== null ? urlParams.get('type') : null
+        };
+
+        // URL 파라미터 가져오기 (하위 호환성을 위해 유지)
         function getUrlParams() {
             console.log("partnercert", window.partnerCert);
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const params = {};
-            
-            // 파라미터 3개 가져오기 (certTxId, signTxId, type)
-            // 빈 문자열도 파라미터로 인식하기 위해 null 체크만 함
-            params.certTxId = urlParams.get('certTxId') !== null ? urlParams.get('certTxId') : null;
-            params.signTxId = urlParams.get('signTxId') !== null ? urlParams.get('signTxId') : null;
-            params.type = urlParams.get('type') !== null ? urlParams.get('type') : null;
-            
-            return params;
+            return window.urlParams;
         }
 
         // 파라미터 표시
         function displayParams() {
-            const params = getUrlParams();
+            const params = window.urlParams;
             const container = document.getElementById('paramsContainer');
-            console.log(params);
+            
             // 파라미터가 하나라도 있는지 확인 (null이 아닌 경우)
             const hasParams = params.certTxId !== null || params.signTxId !== null || params.type !== null;
             
@@ -140,8 +139,83 @@
             }
         }
 
+        function removeRefToken() {
+            console.log(localStorage.getItem('refToken'));
+            localStorage.removeItem('refToken');
+            console.log(localStorage.getItem('refToken'));
+        }
+
+        // partnerCert 초기화 함수
+        function initPartnerCert() {
+            // partnerCert 스크립트가 로드되었는지 확인
+            if (window.partnerCert && typeof window.partnerCert.urlInit === 'function') {
+                const locPathname = window.location.pathname;
+                const partner = window.location.href;
+
+                window.partnerCert.urlInit(
+                    partner + locPathname,
+                    // `https://dev-m.sign.shinhan.com/mw/pg/sign`,
+                    `https://dev-m.sign.shinhan.com`,
+                    "ko"
+                );
+            } else {
+                // 스크립트가 아직 로드되지 않았다면 대기
+                setTimeout(initPartnerCert, 100);
+            }
+
+            goPartnerCert();
+        }
+
+        function goPartnerCert() {
+            const iframe = document.querySelector("#callCloudSignIframe");
+            if (!type) {
+                console.log('type 파라미터가 없습니다.');
+                return;
+            }
+            
+            switch(type) {
+                case '1':
+                    // type이 1일 때 처리
+                    console.log('type 1');
+                    removeRefToken();
+                    window.partnerCert
+                        .callCloudSign(signTxId, certTxId, iframe)
+                        .then((result) => {
+                        setSignResult(JSON.stringify(result));
+
+                        if (result.data.resultType === "FAIL") {
+                            console.log("로그인/전자서명 실패");
+                            // 실패 시 모달 닫기 (선택사항)
+                            // if (modal) modal.style.display = "none";
+                        } else if (result.data.resultType === "SUCCESS") {
+                            console.log("로그인/전자서명 성공");
+                            // 성공 시 모달 닫기 (선택사항)
+                            // if (modal) modal.style.display = "none";
+                        }
+                        });
+                    break;
+                case '2':
+                    // type이 2일 때 처리
+                    console.log('type 2 처리');
+                    break;
+                case '3':
+                    // type이 3일 때 처리
+                    console.log('type 3 처리');
+                    break;
+                default:
+                    // 그 외의 type 값 처리
+                    console.log('알 수 없는 type:', type);
+                    break;
+            }
+        }
+
         // 페이지 로드 시 파라미터 표시
         displayParams();
+        
+        // partnerCert 초기화 (스크립트 로드 후 실행)
+        window.addEventListener('load', function() {
+            initPartnerCert();
+        });
     </script>
 </body>
 </html>
