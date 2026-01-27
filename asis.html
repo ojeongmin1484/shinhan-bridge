@@ -209,7 +209,7 @@
         // IndexedDB 데이터베이스 전체 삭제
         function removeRefToken() {
             const dbName = 'ref_token';
-            const request = indexedDB.open(dbInfo.name);
+            const request = indexedDB.open(dbName);
 
     request.onsuccess = () => {
       const db = request.result;
