@@ -20,6 +20,10 @@
       "dest": "/tobe.html"
     },
     {
+      "src": "/tobe_molri.html",
+      "dest": "/tobe_molri.html"
+    },
+    {
       "src": "/",
       "dest": "/asis.html"
     }
