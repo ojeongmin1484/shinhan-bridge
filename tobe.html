@@ -184,11 +184,13 @@
                     `https://dev-m.sign.shinhan.com/dev-corpcert/pg/sign`,
                     "ko"
                 )
-                .then(() => {
+                .then(async () => {
+                    await fakeApiCall();
                     goPartnerCert();
                 })
                 .catch((error) => {
                     console.error('partnerCert popupInit 실패:', error);
+                    return Promise.reject(error);
                 });
             } else {
                 // 스크립트가 아직 로드되지 않았다면 대기
@@ -283,6 +285,14 @@
         window.addEventListener('load', function() {
             initPartnerCert();
         });
+        function fakeApiCall(delay = 1000) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('ok');
+    }, delay);
+  });
+}
+
     </script>
 </body>
 </html>
