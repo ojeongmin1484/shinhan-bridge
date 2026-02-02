@@ -170,7 +170,6 @@
             console.log("initPartnerCert");
             // partnerCert 스크립트가 로드되었는지 확인
             if (window.partnerCert && typeof window.partnerCert.popupInit === 'function') {
-                const locPathname = window.location.pathname;
                 const partner = window.location.href;
 
                 // window.partnerCert.urlInit(
@@ -180,7 +179,7 @@
                 //     "ko"
                 // );
                 window.partnerCert.popupInit(
-                    partner + locPathname,
+                    partner,
                     // `https://dev-m.sign.shinhan.com/mw/pg/sign`,
                     `https://dev-m.sign.shinhan.com/dev-corpcert/pg/sign`,
                     "ko"
