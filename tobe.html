@@ -172,18 +172,30 @@
                 const locPathname = window.location.pathname;
                 const partner = window.location.href;
 
-                window.partnerCert.urlInit(
+                // window.partnerCert.urlInit(
+                //     partner + locPathname,
+                //     // `https://dev-m.sign.shinhan.com/mw/pg/sign`,
+                //     `https://dev-m.sign.shinhan.com`,
+                //     "ko"
+                // );
+                window.partnerCert.popupInit(
                     partner + locPathname,
                     // `https://dev-m.sign.shinhan.com/mw/pg/sign`,
                     `https://dev-m.sign.shinhan.com`,
                     "ko"
-                );
+                )
+                .then(() => {
+                    goPartnerCert();
+                })
+                .catch((error) => {
+                    console.error('partnerCert popupInit 실패:', error);
+                });
             } else {
                 // 스크립트가 아직 로드되지 않았다면 대기
                 setTimeout(initPartnerCert, 100);
             }
 
-            goPartnerCert();
+            //goPartnerCert();
         }
 
         function goPartnerCert() {
