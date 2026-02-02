@@ -77,6 +77,10 @@
         <div class="params-container" id="paramsContainer">
             <div class="no-params">URL 파라미터가 없습니다.</div>
         </div>
+        <div class="param-item" id="resultContainer" style="display:none;">
+            <div class="param-label">결과 (result)</div>
+            <pre class="param-value" id="resultValue"></pre>
+        </div>
         <iframe id="callCloudSignIframe" title="callCloudSign" style="display: none;"></iframe>
     </div>
 
@@ -221,7 +225,7 @@
                             return window.partnerCert.callCloudSign(signTxId, certTxId, iframe);
                         })
                         .then((result) => {
-                        setSignResult(JSON.stringify(result));
+                        showResult(result);
 
                         if (result.data.resultType === "FAIL") {
                             console.log("로그인/전자서명 실패");
@@ -240,7 +244,7 @@
                     window.partnerCert
                         .callCloudSign(signTxId, certTxId, iframe)
                         .then((result) => {
-                        setSignResult(JSON.stringify(result));
+                            showResult(result);
 
                         if (result.data.resultType === "FAIL") {
                             console.log("로그인/전자서명 실패");
@@ -259,7 +263,7 @@
                     window.partnerCert
                         .callCloudSignDirectPin(signTxId, certTxId, iframe)
                         .then((result) => {
-                        setSignResult(JSON.stringify(result));
+                            showResult(result);
                         if (result.data.resultType === "FAIL") {
                             console.log("로그인/전자서명 실패");
                             // 실패 시 모달 닫기 (선택사항)
@@ -276,6 +280,14 @@
                     console.log('알 수 없는 type:', type);
                     break;
             }
+        }
+
+        function showResult(result) {
+            const container = document.getElementById('resultContainer');
+            const value = document.getElementById('resultValue');
+
+            container.style.display = 'block';
+            value.innerText = JSON.stringify(result, null, 2); // 예쁘게 출력
         }
 
         // 페이지 로드 시 파라미터 표시
