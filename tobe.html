@@ -168,7 +168,7 @@
         // partnerCert 초기화 함수
         function initPartnerCert() {
             // partnerCert 스크립트가 로드되었는지 확인
-            if (window.partnerCert && typeof window.partnerCert.urlInit === 'function') {
+            if (window.partnerCert && typeof window.partnerCert.popupInit === 'function') {
                 const locPathname = window.location.pathname;
                 const partner = window.location.href;
 
